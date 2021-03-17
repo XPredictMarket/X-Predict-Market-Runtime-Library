@@ -29,6 +29,8 @@ pub trait Tokens<AccountId> {
         to: &AccountId,
         number: Self::Balance,
     ) -> Result<Self::Balance, DispatchError>;
+    fn decimals(currency_id: Self::CurrencyId) -> Result<u8, DispatchError>;
+    fn balance(currency_id: Self::CurrencyId, account: &AccountId) -> Self::Balance;
     fn mint(
         currency_id: Self::CurrencyId,
         to: &AccountId,
@@ -50,4 +52,22 @@ pub trait Tokens<AccountId> {
         value: Self::Balance,
     ) -> Result<Self::Balance, DispatchError>;
     fn reserved_balance(currency_id: Self::CurrencyId, who: &AccountId) -> Self::Balance;
+    fn donate(
+        currency_id: Self::CurrencyId,
+        from: &AccountId,
+        value: Self::Balance,
+    ) -> Result<Self::Balance, DispatchError>;
+    fn mint_donate(
+        currency_id: Self::CurrencyId,
+        value: Self::Balance,
+    ) -> Result<Self::Balance, DispatchError>;
+    fn burn_donate(
+        currency_id: Self::CurrencyId,
+        value: Self::Balance,
+    ) -> Result<Self::Balance, DispatchError>;
+    fn appropriation(
+        currency_id: Self::CurrencyId,
+        to: &AccountId,
+        value: Self::Balance,
+    ) -> Result<Self::Balance, DispatchError>;
 }

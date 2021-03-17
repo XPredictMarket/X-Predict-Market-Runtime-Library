@@ -1,4 +1,4 @@
-use crate::pallet::XRC20;
+use crate::pallet::PRC20;
 use crate::{mock::*, Error};
 use frame_support::{assert_noop, assert_ok};
 
@@ -8,7 +8,7 @@ fn test_new_asset() {
         // native asset is none
         assert_eq!(TokensModule::currencies(0), None);
 
-        let asset = XRC20 {
+        let asset = PRC20 {
             name: "Tether USD".as_bytes().to_vec(),
             symbol: "USD".as_bytes().to_vec(),
             decimals: 6,
@@ -42,7 +42,7 @@ fn test_mint() {
             Error::<Test>::CurrencyIdNotExist
         );
 
-        let asset = XRC20 {
+        let asset = PRC20 {
             name: "Tether USD".as_bytes().to_vec(),
             symbol: "USD".as_bytes().to_vec(),
             decimals: 6,
@@ -82,7 +82,7 @@ fn test_burn() {
             TokensModule::burn(Origin::signed(1), 0, 100),
             Error::<Test>::CannotBurnNativeAsset
         );
-        let asset = XRC20 {
+        let asset = PRC20 {
             name: "Tether USD".as_bytes().to_vec(),
             symbol: "USD".as_bytes().to_vec(),
             decimals: 6,
@@ -116,7 +116,7 @@ fn test_burn() {
 #[test]
 fn test_transfer() {
     new_test_ext().execute_with(|| {
-        let asset = XRC20 {
+        let asset = PRC20 {
             name: "Tether USD".as_bytes().to_vec(),
             symbol: "USD".as_bytes().to_vec(),
             decimals: 6,
@@ -151,7 +151,7 @@ fn test_transfer() {
 #[test]
 fn test_approve() {
     new_test_ext().execute_with(|| {
-        let asset = XRC20 {
+        let asset = PRC20 {
             name: "Tether USD".as_bytes().to_vec(),
             symbol: "USD".as_bytes().to_vec(),
             decimals: 6,
@@ -183,7 +183,7 @@ fn test_approve() {
 #[test]
 fn test_burn_from() {
     new_test_ext().execute_with(|| {
-        let asset = XRC20 {
+        let asset = PRC20 {
             name: "Tether USD".as_bytes().to_vec(),
             symbol: "USD".as_bytes().to_vec(),
             decimals: 6,
@@ -218,7 +218,7 @@ fn test_burn_from() {
 #[test]
 fn test_transfer_from() {
     new_test_ext().execute_with(|| {
-        let asset = XRC20 {
+        let asset = PRC20 {
             name: "Tether USD".as_bytes().to_vec(),
             symbol: "USD".as_bytes().to_vec(),
             decimals: 6,

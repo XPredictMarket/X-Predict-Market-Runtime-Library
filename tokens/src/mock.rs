@@ -2,10 +2,7 @@ use crate as tokens;
 use frame_support::parameter_types;
 use frame_system as system;
 use sp_core::H256;
-use sp_runtime::{
-    testing::Header,
-    traits::{BlakeTwo256, IdentityLookup},
-};
+use sp_runtime::{ModuleId, testing::Header, traits::{BlakeTwo256, IdentityLookup}};
 
 type UncheckedExtrinsic = frame_system::mocking::MockUncheckedExtrinsic<Test>;
 type Block = frame_system::mocking::MockBlock<Test>;
@@ -70,6 +67,8 @@ impl pallet_balances::Config for Test {
 
 parameter_types! {
     pub const NativeCurrencyId: CurrencyId = 0;
+    pub const NaticeCurrencyDecimals: u8 = 18;
+	pub const TokensModuleId: ModuleId = ModuleId(*b"xptokens");
 }
 
 impl tokens::Config for Test {
@@ -77,6 +76,8 @@ impl tokens::Config for Test {
     type CurrencyId = CurrencyId;
     type Currency = PalletBalances;
     type NativeCurrencyId = NativeCurrencyId;
+    type ModuleId = TokensModuleId;
+	type NaticeCurrencyDecimals = NaticeCurrencyDecimals;
 }
 
 pub fn new_test_ext() -> sp_io::TestExternalities {
