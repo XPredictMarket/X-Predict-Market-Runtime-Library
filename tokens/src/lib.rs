@@ -307,6 +307,16 @@ impl<T: Config> Pallet<T> {
 		})
 	}
 
+	pub fn ensure_currency_id(currency_id: T::CurrencyId) -> Result<(), DispatchError> {
+		if currency_id != T::NativeCurrencyId::get() {
+			ensure!(
+				Currencies::<T>::contains_key(currency_id),
+				Error::<T>::CurrencyIdNotExist
+			);
+		}
+		Ok(())
+	}
+
 	pub fn inner_decimals(currency_id: T::CurrencyId) -> Result<u8, DispatchError> {
 		if currency_id == T::NativeCurrencyId::get() {
 			Ok(T::NaticeCurrencyDecimals::get())
@@ -336,10 +346,7 @@ impl<T: Config> Pallet<T> {
 		to: &T::AccountId,
 		number: BalanceType<T>,
 	) -> Result<BalanceType<T>, DispatchError> {
-		ensure!(
-			Currencies::<T>::contains_key(currency_id),
-			Error::<T>::CurrencyIdNotExist
-		);
+		Self::ensure_currency_id(currency_id)?;
 		if currency_id == T::NativeCurrencyId::get() {
 			let old_balance = T::Currency::free_balance(&to);
 			let new_balance = old_balance
@@ -386,10 +393,7 @@ impl<T: Config> Pallet<T> {
 			currency_id != T::NativeCurrencyId::get(),
 			Error::<T>::CannotBurnNativeAsset
 		);
-		ensure!(
-			Currencies::<T>::contains_key(currency_id),
-			Error::<T>::CurrencyIdNotExist
-		);
+		Self::ensure_currency_id(currency_id)?;
 		let actual_number = BalanceOf::<T>::try_mutate(
 			&from,
 			currency_id,
@@ -424,10 +428,7 @@ impl<T: Config> Pallet<T> {
 		to: &T::AccountId,
 		number: BalanceType<T>,
 	) -> Result<BalanceType<T>, DispatchError> {
-		ensure!(
-			Currencies::<T>::contains_key(currency_id),
-			Error::<T>::CurrencyIdNotExist
-		);
+		Self::ensure_currency_id(currency_id)?;
 		ensure!(
 			BalanceOf::<T>::get(&from, currency_id).unwrap_or(Zero::zero()) >= number,
 			Error::<T>::InsufficientBalance
@@ -474,10 +475,7 @@ impl<T: Config> Pallet<T> {
 		spender: &T::AccountId,
 		number: BalanceType<T>,
 	) -> Result<BalanceType<T>, DispatchError> {
-		ensure!(
-			Currencies::<T>::contains_key(currency_id),
-			Error::<T>::CurrencyIdNotExist
-		);
+		Self::ensure_currency_id(currency_id)?;
 		ensure!(owner != spender, Error::<T>::ApproveSelf);
 		Allowance::<T>::try_mutate(
 			owner,
