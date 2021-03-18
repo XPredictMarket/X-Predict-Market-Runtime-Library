@@ -59,9 +59,6 @@ pub mod pallet {
 
 		#[pallet::constant]
 		type ModuleId: Get<ModuleId>;
-
-		#[pallet::constant]
-		type NaticeCurrencyDecimals: Get<u8>;
 	}
 
 	#[pallet::pallet]
@@ -318,12 +315,8 @@ impl<T: Config> Pallet<T> {
 	}
 
 	pub fn inner_decimals(currency_id: T::CurrencyId) -> Result<u8, DispatchError> {
-		if currency_id == T::NativeCurrencyId::get() {
-			Ok(T::NaticeCurrencyDecimals::get())
-		} else {
-			let xrc = Currencies::<T>::get(currency_id).ok_or(Error::<T>::CurrencyIdNotExist)?;
-			Ok(xrc.decimals)
-		}
+		let xrc = Currencies::<T>::get(currency_id).ok_or(Error::<T>::CurrencyIdNotExist)?;
+		Ok(xrc.decimals)
 	}
 
 	pub fn inner_new_asset(
